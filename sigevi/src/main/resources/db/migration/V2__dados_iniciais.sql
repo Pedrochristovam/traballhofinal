@@ -1,0 +1,1 @@
+-- Dados iniciais opcionais: usuario admin e criado via AdminSeedConfig (BCrypt em runtime)
