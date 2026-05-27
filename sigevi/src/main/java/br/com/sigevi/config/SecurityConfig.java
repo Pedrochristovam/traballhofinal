@@ -19,6 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configuração da segurança da API, sô.
+ * Aqui é onde a gente define quem entra, quem num entra, e como o JWT roda no trem.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -35,19 +39,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable) // API REST stateless, CSRF num faz sentido aqui não
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // sem sessão no servidor, só JWT
                 .authorizeHttpRequests(auth -> auth
+                        // rotas liberadas pra qualquer um — login, swagger e h2 no dev
                         .requestMatchers(
                                 "/auth/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/h2-console/**"
                         ).permitAll()
+                        // só ADMIN cria usuário; auditoria também é coisa de chefe
                         .requestMatchers(HttpMethod.POST, "/usuarios").hasRole("ADMIN")
                         .requestMatchers("/usuarios/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/auditorias/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated() // o resto tem que chegar com token, uai
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -69,6 +76,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // senha num vai pro banco em texto puro, né — BCrypt dá uma embaralhada boa
         return new BCryptPasswordEncoder();
     }
 }

@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Observer Pattern: listener que persiste eventos de auditoria.
+ * Observer — quem de fato salva a auditoria no PostgreSQL.
+ * O service só publica o evento; esse trem aqui escuta e grava, separadinho (ISP/DIP).
  */
 @Component
 public class AuditoriaPersistListener implements AuditoriaListener {

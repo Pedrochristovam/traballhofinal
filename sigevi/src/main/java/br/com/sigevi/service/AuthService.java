@@ -15,6 +15,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Serviço de login, ó.
+ * Valida e-mail/senha, gera o JWT e já registra na auditoria que o caboclo entrou no sistema.
+ */
 @Service
 public class AuthService {
 
@@ -41,6 +45,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
+        // Spring Security confere senha com BCrypt — se num bater, já era
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha()));
@@ -49,7 +54,7 @@ public class AuthService {
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        String token = jwtTokenProvider.generateToken(userDetails);
+        String token = jwtTokenProvider.generateToken(userDetails); // aqui nasce o token pro Swagger/Postman
 
         var usuario = usuarioRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UnauthorizedException("Usuario nao encontrado"));

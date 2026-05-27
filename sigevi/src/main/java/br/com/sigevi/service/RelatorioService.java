@@ -20,6 +20,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+/**
+ * Geração de relatório PDF da vistoria.
+ * Usa Strategy pra escolher resumido ou completo e Factory pra montar a entidade.
+ */
 @Service
 public class RelatorioService {
 
@@ -50,6 +54,7 @@ public class RelatorioService {
         var vistoria = vistoriaService.buscarEntidade(vistoriaId);
         var usuario = usuarioService.buscarEntidade(usuarioId);
 
+        // aqui é o Strategy em ação — cada tipo de PDF tem sua classe
         Path arquivoGerado = strategyContext.gerar(request.getTipo(), vistoria, relatorioDir);
 
         Relatorio relatorio = RelatorioFactory.criar(

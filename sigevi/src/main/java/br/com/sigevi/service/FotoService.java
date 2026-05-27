@@ -22,6 +22,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Upload e download das fotos da vistoria.
+ * Salva em disco na pasta configurada e registra no banco o caminho do arquivo.
+ */
 @Service
 public class FotoService {
 
@@ -49,9 +53,10 @@ public class FotoService {
 
     @Transactional
     public FotoResponse upload(Long vistoriaId, MultipartFile arquivo, Long usuarioId) {
-        imagemValidator.validar(arquivo);
+        imagemValidator.validar(arquivo); // jpeg/png/webp só — o resto o validator já barra
         var vistoria = vistoriaService.buscarEntidade(vistoriaId);
 
+        // UUID no nome pra num ter choque de arquivo quando dois inspetor sobem foto junto
         String nomeArquivo = UUID.randomUUID() + "_" + arquivo.getOriginalFilename();
         Path destino = uploadDir.resolve(nomeArquivo);
 

@@ -12,11 +12,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Strategy Pattern: contexto que delega a estrategia correta em tempo de execucao.
+ * Strategy Pattern (OCP) — escolhe qual "receita" de PDF usar.
+ * Resumido ou completo? O contexto delega sem ficar cheio de if/else feio.
  */
 @Component
 public class RelatorioStrategyContext {
 
+    // Spring injeta todas as estratégias (@Component) e a gente indexa pelo tipo
     private final Map<String, RelatorioGeracaoStrategy> strategies;
 
     public RelatorioStrategyContext(List<RelatorioGeracaoStrategy> strategyList) {
@@ -27,7 +29,7 @@ public class RelatorioStrategyContext {
     public Path gerar(TipoRelatorio tipo, Vistoria vistoria, Path diretorio) {
         RelatorioGeracaoStrategy strategy = strategies.get(tipo.name());
         if (strategy == null) {
-            throw new BusinessException("Tipo de relatorio nao suportado: " + tipo);
+            throw new BusinessException("Tipo de relatorio nao suportado: " + tipo); // tipo que num existe, uai
         }
         return strategy.gerar(vistoria, diretorio);
     }

@@ -16,6 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Coração do negócio das vistorias, uai.
+ * Cria vistoria, muda status, observação — e tudo que mexe aqui vai parar na auditoria.
+ */
 @Service
 public class VistoriaService {
 
@@ -42,6 +46,7 @@ public class VistoriaService {
 
     @Transactional
     public VistoriaResponse criar(VistoriaRequest request, Long usuarioId) {
+        // toda vistoria nova começa AGENDADA — depois o inspetor vai mudando o status no campo
         Vistoria vistoria = Vistoria.builder()
                 .imovel(imovelService.buscarEntidade(request.getImovelId()))
                 .inspetor(usuarioService.buscarEntidade(request.getInspetorId()))
@@ -64,6 +69,7 @@ public class VistoriaService {
     public VistoriaResponse alterarStatus(Long id, StatusVistoriaRequest request, Long usuarioId) {
         Vistoria vistoria = buscarEntidade(id);
         StatusVistoria statusAnterior = vistoria.getStatus();
+        // num deixa pular etapa à toa — ex: CONCLUÍDA voltar pra AGENDADA num rola
         statusValidator.validarTransicao(statusAnterior, request.getStatus());
         vistoria.setStatus(request.getStatus());
         vistoria = vistoriaRepository.save(vistoria);

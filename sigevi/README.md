@@ -2,6 +2,9 @@
 
 API REST corporativa em **Java 21** + **Spring Boot 3** para gestão de imóveis, vistorias, fotos, relatórios PDF e auditoria.
 
+> **Documentação acadêmica (trabalho de Engenharia de Software):** [docs/DOCUMENTACAO-SIGEVI.md](docs/DOCUMENTACAO-SIGEVI.md)  
+> **Checklist do anúncio da UC:** [docs/CHECKLIST-TRABALHO.md](docs/CHECKLIST-TRABALHO.md)
+
 ## Stack
 
 | Tecnologia | Uso |
@@ -173,21 +176,33 @@ Use **Authorize** com: `Bearer <seu-jwt>`.
 
 ## Como executar
 
-### Pré-requisitos
-- JDK 21
-- Maven 3.9+
-- PostgreSQL 15+
+### Opção A — Sem PostgreSQL (recomendado para testar rápido)
 
-### Banco
 ```bash
-psql -U postgres -f scripts/init-database.sql
+cd sigevi
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-### Aplicação
+Na IDE (VS Code / IntelliJ): defina **Active profiles** = `dev`.
+
+Usa banco **H2 em memória** — não precisa instalar PostgreSQL.
+
+### Opção B — Com PostgreSQL (produção / entrega final)
+
+**Pré-requisitos:** JDK 21, Maven 3.9+, PostgreSQL 15+ rodando na porta **5432**.
+
 ```bash
+psql -U postgres -f scripts/init-database.sql
 cd sigevi
 mvn spring-boot:run
 ```
+
+### Erro comum: `Connection to localhost:5432 refused`
+
+Significa que o **PostgreSQL não está instalado, não está ligado ou o banco `sigevi` não existe**.
+
+- Suba o serviço PostgreSQL **ou**
+- Use o perfil **`dev`** (Opção A acima).
 
 ### Testes
 ```bash

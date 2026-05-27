@@ -9,11 +9,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * SRP + regras de negocio: transicoes validas de status de vistoria.
+ * Regrinha de ouro do status da vistoria (SRP).
+ * Aqui a gente num deixa o povo inventar transição que num existe no processo real, tá ligado?
  */
 @Component
 public class StatusVistoriaValidator {
 
+    // mapa de "de onde" -> "pra onde pode ir"
     private static final Map<StatusVistoria, Set<StatusVistoria>> TRANSICOES = new EnumMap<>(StatusVistoria.class);
 
     static {
@@ -27,6 +29,7 @@ public class StatusVistoriaValidator {
     public void validarTransicao(StatusVistoria atual, StatusVistoria novo) {
         Set<StatusVistoria> permitidos = TRANSICOES.getOrDefault(atual, Set.of());
         if (!permitidos.contains(novo)) {
+            // se tentar um pulo inválido, devolve erro claro pro front — bah, num pode assim
             throw new BusinessException(
                     String.format("Transicao invalida de %s para %s", atual, novo));
         }

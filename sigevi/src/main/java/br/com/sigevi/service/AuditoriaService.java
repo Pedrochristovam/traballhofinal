@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Serviço de auditoria — guarda o "quem fez o quê".
+ * Em vez de gravar direto no banco, publica evento (Observer) e o listener persiste.
+ */
 @Service
 public class AuditoriaService {
 
@@ -26,6 +30,7 @@ public class AuditoriaService {
         this.auditoriaPublisher = auditoriaPublisher;
     }
 
+    // chamado pelos outros services quando mexe em imóvel, vistoria, login, etc.
     public void registrar(String entidade, Long entidadeId, AcaoAuditoria acao,
                           String valorAnterior, String valorNovo, Long usuarioId) {
         AuditoriaEvent event = AuditoriaEvent.builder()
