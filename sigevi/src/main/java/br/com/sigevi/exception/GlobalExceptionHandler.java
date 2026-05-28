@@ -14,10 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Pegadinha global de erro da API.
- * Qualquer exceção que subir sem tratamento, a gente transforma num JSON bonitinho pro cliente entender, né.
- */
+/** Transforma erro em JSON pro front entender. */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -46,7 +43,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.FORBIDDEN, "Acesso negado", request.getRequestURI());
     }
 
-    // quando o @Valid estoura no DTO — campo obrigatório, e-mail inválido e por aí vai
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();

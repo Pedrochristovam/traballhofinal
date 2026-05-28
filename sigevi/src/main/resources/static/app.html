@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SIGEVI — Painel</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header header--row">
+        <div class="brand">
+          <div class="brand__logo">SV</div>
+          <div class="brand__text">
+            <div class="brand__title">SIGEVI</div>
+            <div class="brand__subtitle">Painel (demo integrada com a API)</div>
+          </div>
+        </div>
+
+        <div class="header__right">
+          <div class="pill">
+            <span class="pill__label">Usuário</span>
+            <span id="meLabel" class="pill__value">—</span>
+          </div>
+          <button id="logoutBtn" class="btn btn--ghost" type="button">Sair</button>
+        </div>
+      </header>
+
+      <section class="grid">
+        <div class="card">
+          <h2 class="card__title">1) Criar imóvel</h2>
+          <p class="card__subtitle">Preencha e cadastre. Dica: a matrícula tem que ser única.</p>
+
+          <form id="imovelForm" class="form form--grid">
+            <label class="field">
+              <span class="field__label">Matrícula</span>
+              <input id="matricula" class="field__input" placeholder="MAT-100" required />
+            </label>
+            <label class="field">
+              <span class="field__label">Endereço</span>
+              <input id="endereco" class="field__input" placeholder="Rua A, 123" required />
+            </label>
+            <label class="field">
+              <span class="field__label">Cidade</span>
+              <input id="cidade" class="field__input" placeholder="Belo Horizonte" required />
+            </label>
+            <label class="field">
+              <span class="field__label">UF</span>
+              <input id="estado" class="field__input" placeholder="MG" maxlength="2" required />
+            </label>
+            <label class="field">
+              <span class="field__label">CEP</span>
+              <input id="cep" class="field__input" placeholder="30110-000" required />
+            </label>
+            <label class="field">
+              <span class="field__label">Tipo</span>
+              <select id="tipo" class="field__input">
+                <option value="RESIDENCIAL">RESIDENCIAL</option>
+                <option value="COMERCIAL">COMERCIAL</option>
+                <option value="INDUSTRIAL">INDUSTRIAL</option>
+                <option value="TERRENO">TERRENO</option>
+                <option value="RURAL">RURAL</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="field__label">Área (m²)</span>
+              <input id="areaM2" class="field__input" type="number" step="0.01" placeholder="85.50" />
+            </label>
+            <label class="field field--full">
+              <span class="field__label">Descrição</span>
+              <input id="descricao" class="field__input" placeholder="Apartamento 2 quartos..." />
+            </label>
+
+            <div class="field field--full">
+              <div id="imovelMsg" class="alert hidden"></div>
+              <button class="btn btn--primary" type="submit">Cadastrar imóvel</button>
+            </div>
+          </form>
+
+          <div class="kpi">
+            <div class="kpi__label">Último imóvel criado</div>
+            <div class="kpi__value">ID: <span id="lastImovelId">—</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="card__title">2) Criar vistoria</h2>
+          <p class="card__subtitle">Vincula a vistoria ao imóvel e usa você como inspetor.</p>
+
+          <form id="vistoriaForm" class="form">
+            <label class="field">
+              <span class="field__label">Imóvel ID</span>
+              <input id="vistoriaImovelId" class="field__input" type="number" placeholder="2" required />
+            </label>
+
+            <label class="field">
+              <span class="field__label">Data da vistoria</span>
+              <input id="dataVistoria" class="field__input" type="date" required />
+            </label>
+
+            <label class="field">
+              <span class="field__label">Observações</span>
+              <input id="observacoes" class="field__input" placeholder="Conferir pintura e tomadas..." />
+            </label>
+
+            <div id="vistoriaMsg" class="alert hidden"></div>
+            <button class="btn btn--primary" type="submit">Criar vistoria</button>
+          </form>
+
+          <div class="kpi">
+            <div class="kpi__label">Última vistoria criada</div>
+            <div class="kpi__value">ID: <span id="lastVistoriaId">—</span></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <h3 class="card__title card__title--sm">3) Alterar status</h3>
+          <form id="statusForm" class="form form--row">
+            <input id="statusVistoriaId" class="field__input" type="number" placeholder="Vistoria ID" required />
+            <select id="statusNovo" class="field__input">
+              <option value="EM_ANDAMENTO">EM_ANDAMENTO</option>
+              <option value="CONCLUIDA">CONCLUIDA</option>
+              <option value="REPROVADA">REPROVADA</option>
+              <option value="CANCELADA">CANCELADA</option>
+            </select>
+            <button class="btn btn--secondary" type="submit">Atualizar</button>
+          </form>
+          <div id="statusMsg" class="alert hidden"></div>
+        </div>
+
+        <div class="card">
+          <h2 class="card__title">4) Upload de foto</h2>
+          <p class="card__subtitle">Envie uma imagem (jpg/png/webp) para a vistoria.</p>
+
+          <form id="fotoForm" class="form">
+            <label class="field">
+              <span class="field__label">Vistoria ID</span>
+              <input id="fotoVistoriaId" class="field__input" type="number" required />
+            </label>
+            <label class="field">
+              <span class="field__label">Arquivo</span>
+              <input id="fotoArquivo" class="field__input" type="file" accept="image/*" required />
+            </label>
+            <div id="fotoMsg" class="alert hidden"></div>
+            <button class="btn btn--primary" type="submit">Enviar foto</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2 class="card__title">5) Gerar relatório PDF</h2>
+          <p class="card__subtitle">Gera PDF resumido ou completo. O download é feito já com seu token (sem dar 403).</p>
+
+          <form id="relatorioForm" class="form form--row">
+            <input id="relatorioVistoriaId" class="field__input" type="number" placeholder="Vistoria ID" required />
+            <select id="relatorioTipo" class="field__input">
+              <option value="RESUMIDO">RESUMIDO</option>
+              <option value="COMPLETO">COMPLETO</option>
+            </select>
+            <button class="btn btn--primary" type="submit">Gerar</button>
+          </form>
+
+          <div id="relatorioMsg" class="alert hidden"></div>
+
+          <div class="kpi">
+            <div class="kpi__label">Último relatório</div>
+            <div class="kpi__value">
+              ID: <span id="lastRelatorioId">—</span>
+              <span class="sep">·</span>
+              <button id="downloadRelatorioBtn" class="btn btn--ghost" type="button" disabled>Baixar PDF</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>Base API: <code id="apiBase"></code></span>
+        <span>Swagger: <a href="./swagger-ui.html" target="_blank" rel="noreferrer">abrir</a></span>
+      </footer>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

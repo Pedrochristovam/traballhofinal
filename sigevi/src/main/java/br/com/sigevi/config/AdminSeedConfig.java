@@ -9,10 +9,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-/**
- * Na primeira subida da API, cria o admin padrão se num existir ainda.
- * Senha já vai criptografada — login: admin@sigevi.com / Admin@123
- */
+/** Na primeira subida cria o admin se não tiver — admin@sigevi.com / Admin@123 */
 @Component
 @Profile("!test")
 public class AdminSeedConfig implements ApplicationRunner {
@@ -27,7 +24,6 @@ public class AdminSeedConfig implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        // só cria uma vez — se já tiver admin no banco, num mexe
         if (!usuarioRepository.existsByEmail("admin@sigevi.com")) {
             Usuario admin = Usuario.builder()
                     .nome("Administrador SIGEVI")

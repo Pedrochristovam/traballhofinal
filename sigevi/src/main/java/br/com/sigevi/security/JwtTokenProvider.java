@@ -11,10 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 
-/**
- * Trem responsável por criar e validar o token JWT.
- * Se o token tiver ruim ou vencido, num passa — é aqui que a gente confere.
- */
+/** Cria e valida o token JWT. */
 @Component
 public class JwtTokenProvider {
 
@@ -24,7 +21,6 @@ public class JwtTokenProvider {
         this.jwtProperties = jwtProperties;
     }
 
-    // monta o token depois do login dar certo — válido por um tempo configurado no yml
     public String generateToken(UserDetails userDetails) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + jwtProperties.getExpirationMs());
@@ -40,7 +36,6 @@ public class JwtTokenProvider {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // confere se o token ainda presta e se é do usuário certo mesmo
     public boolean isTokenValid(String token, UserDetails userDetails) {
         String username = extractUsername(token);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);

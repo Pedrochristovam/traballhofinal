@@ -13,10 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * CRUD de imóvel — matrícula, endereço, busca.
- * Toda criação/alteração grita na auditoria pra ninguém dizer que num sabe quem mexeu.
- */
+/** Cadastro e busca de imóvel. */
 @Service
 public class ImovelService {
 

@@ -6,17 +6,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
-/**
- * Só cuida de foto — SRP na veia.
- * Num deixa subir PDF, .exe nem arquivo gigante que derruba o servidor, sô.
- */
+/** Só aceita foto de vistoria, nada de arquivo estranho ou gigante. */
 @Component
 public class ImagemValidator {
 
     private static final Set<String> TIPOS_PERMITIDOS = Set.of(
             "image/jpeg", "image/png", "image/webp"
     );
-    private static final long TAMANHO_MAXIMO = 10 * 1024 * 1024; // 10 MB, mais que isso já vira sufoco
+    private static final long TAMANHO_MAXIMO = 10 * 1024 * 1024;
 
     public void validar(MultipartFile arquivo) {
         if (arquivo == null || arquivo.isEmpty()) {
