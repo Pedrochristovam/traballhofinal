@@ -4,9 +4,6 @@ import br.com.sigevi.model.enums.AcaoAuditoria;
 import lombok.Builder;
 import lombok.Getter;
 
-/**
- * Observer Pattern: evento publicado quando ocorre alteracao relevante no sistema.
- */
 @Getter
 @Builder
 public class AuditoriaEvent {

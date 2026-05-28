@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SIGEVI — Login</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <div class="brand">
+          <div class="brand__logo">SV</div>
+          <div class="brand__text">
+            <div class="brand__title">SIGEVI</div>
+            <div class="brand__subtitle">Sistema de Gestão de Vistorias Imobiliárias</div>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <h1 class="card__title">Entrar</h1>
+        <p class="card__subtitle">Use seu e-mail e senha para acessar o sistema.</p>
+
+        <form id="loginForm" class="form">
+          <label class="field">
+            <span class="field__label">E-mail</span>
+            <input id="email" class="field__input" type="email" placeholder="admin@sigevi.com" required />
+          </label>
+
+          <label class="field">
+            <span class="field__label">Senha</span>
+            <input id="senha" class="field__input" type="password" placeholder="Admin@123" required />
+          </label>
+
+          <div id="loginError" class="alert alert--error hidden"></div>
+          <div id="loginOk" class="alert alert--ok hidden"></div>
+
+          <button id="loginBtn" class="btn btn--primary" type="submit">Entrar</button>
+          <div class="hint">
+            Dica: no perfil <code>dev</code> (H2), o admin padrão é <b>admin@sigevi.com</b> / <b>Admin@123</b>.
+          </div>
+        </form>
+      </section>
+
+      <footer class="footer">
+        <span>API: <code id="apiBase"></code></span>
+        <span>Swagger: <a href="./swagger-ui.html" target="_blank" rel="noreferrer">abrir</a></span>
+      </footer>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

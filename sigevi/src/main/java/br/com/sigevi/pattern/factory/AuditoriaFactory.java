@@ -5,9 +5,6 @@ import br.com.sigevi.model.Usuario;
 import br.com.sigevi.model.enums.AcaoAuditoria;
 import br.com.sigevi.pattern.observer.AuditoriaEvent;
 
-/**
- * Factory Pattern: cria registros de auditoria a partir de eventos.
- */
 public final class AuditoriaFactory {
 
     private AuditoriaFactory() {

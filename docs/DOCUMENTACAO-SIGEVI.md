@@ -659,7 +659,7 @@ Este trabalho nos ajudou a ligar a teoria da disciplina (requisitos, modelagem, 
 | Repositório GitHub | https://github.com/Pedrochristovam/traballhofinal |
 | Código da API | pasta `sigevi/` |
 | README técnico | `sigevi/README.md` |
-| Este documento | `sigevi/docs/DOCUMENTACAO-SIGEVI.md` |
+| Este documento | `docs/DOCUMENTACAO-SIGEVI.md` |
 
 ---
 

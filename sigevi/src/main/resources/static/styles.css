@@ -1,0 +1,129 @@
+:root{
+  --bg:#0b1020;
+  --panel:#0f172a;
+  --card:#111c35;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --brand:#60a5fa;
+  --brand2:#1e3a8a;
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --err:#ef4444;
+  --border:rgba(255,255,255,.08);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background: radial-gradient(1200px 800px at 10% 10%, rgba(96,165,250,.18), transparent 50%),
+              radial-gradient(900px 600px at 90% 30%, rgba(34,197,94,.10), transparent 55%),
+              var(--bg);
+  color:var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+}
+
+.container{max-width:1100px;margin:0 auto;padding:28px 16px 40px}
+
+.header{margin-bottom:18px}
+.header--row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.header__right{display:flex;align-items:center;gap:10px}
+
+.brand{display:flex;align-items:center;gap:12px}
+.brand__logo{
+  width:44px;height:44px;border-radius:12px;
+  display:grid;place-items:center;
+  font-weight:800;letter-spacing:.5px;
+  background: linear-gradient(135deg, var(--brand), rgba(96,165,250,.25));
+  color:#04122b;
+}
+.brand__title{font-size:18px;font-weight:800}
+.brand__subtitle{font-size:13px;color:var(--muted)}
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+}
+.card__title{margin:0 0 6px;font-size:18px}
+.card__title--sm{font-size:15px;margin-top:0}
+.card__subtitle{margin:0 0 14px;color:var(--muted);font-size:13px}
+
+.grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:14px;
+}
+
+/* deixa as seções “uma embaixo da outra”, estilo checklist */
+.card{scroll-margin-top: 12px;}
+
+.form{display:flex;flex-direction:column;gap:10px}
+.form--row{display:flex;flex-direction:row;gap:10px;align-items:end;flex-wrap:wrap}
+.form--grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap:10px;
+}
+.field--full{grid-column:1 / -1}
+
+.field{display:flex;flex-direction:column;gap:6px}
+.field__label{font-size:12px;color:var(--muted)}
+.field__input{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background: rgba(3,7,18,.35);
+  color:var(--text);
+  outline:none;
+}
+.field__input:focus{border-color: rgba(96,165,250,.6); box-shadow: 0 0 0 3px rgba(96,165,250,.15)}
+
+.btn{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 12px;
+  background: rgba(255,255,255,.06);
+  color:var(--text);
+  cursor:pointer;
+  font-weight:650;
+}
+.btn--primary{background: linear-gradient(135deg, rgba(96,165,250,.95), rgba(96,165,250,.35)); color:#04122b; border-color: rgba(96,165,250,.35)}
+.btn--secondary{background: linear-gradient(135deg, rgba(245,158,11,.95), rgba(245,158,11,.22)); color:#1b1201; border-color: rgba(245,158,11,.35)}
+.btn--ghost{background: transparent}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+
+.alert{
+  border-radius:12px;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  font-size:13px;
+}
+.alert--ok{border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.10)}
+.alert--warn{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10)}
+.alert--error{border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10)}
+.hidden{display:none}
+
+.kpi{margin-top:12px;border-top:1px solid var(--border);padding-top:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.kpi__label{color:var(--muted);font-size:12px}
+.kpi__value{font-weight:700}
+.sep{opacity:.5;margin:0 6px}
+
+.divider{height:1px;background:var(--border);margin:14px 0}
+.hint{margin-top:10px;color:var(--muted);font-size:12px}
+code{background: rgba(255,255,255,.06); padding:2px 6px; border-radius:8px; border:1px solid var(--border)}
+
+.footer{margin-top:18px;display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.link{color: var(--brand);text-decoration:none;font-weight:700}
+.link.disabled{pointer-events:none;opacity:.5}
+
+.pill{
+  display:flex;gap:8px;align-items:center;
+  padding:8px 10px;border-radius:999px;
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.04);
+  font-size:12px;
+}
+.pill__label{color:var(--muted)}
+.pill__value{font-weight:750}

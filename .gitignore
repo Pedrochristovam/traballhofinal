@@ -1,0 +1,6 @@
+sigevi/target/
+sigevi/uploads/
+sigevi/.idea/
+sigevi/*.iml
+*.log
+.env

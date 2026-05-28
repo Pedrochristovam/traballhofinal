@@ -15,10 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/**
- * Filtro que roda em TODA requisição (quase): olha o header Authorization.
- * Se vier "Bearer token...", valida e libera o sujeito; se num, segue o baile sem autenticar.
- */
+/** Olha o Bearer no header e libera quem tiver token válido. */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -37,7 +34,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-        // sem Bearer no header? então num é rota autenticada ou o front esqueceu o token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;

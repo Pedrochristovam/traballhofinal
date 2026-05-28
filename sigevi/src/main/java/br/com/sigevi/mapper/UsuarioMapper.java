@@ -5,9 +5,6 @@ import br.com.sigevi.dto.response.UsuarioResponse;
 import br.com.sigevi.model.Usuario;
 import org.springframework.stereotype.Component;
 
-/**
- * DTO Pattern: converte entre entidade de dominio e objetos de transferencia.
- */
 @Component
 public class UsuarioMapper {
 

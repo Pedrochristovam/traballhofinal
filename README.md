@@ -2,6 +2,7 @@
 
 API REST corporativa em **Java 21** + **Spring Boot 3** para gestão de imóveis, vistorias, fotos, relatórios PDF e auditoria.
 
+> **Como iniciar o sistema (comandos + URLs front/back):** [docs/COMO-INICIAR.md](docs/COMO-INICIAR.md)  
 > **Documentação acadêmica (trabalho de Engenharia de Software):** [docs/DOCUMENTACAO-SIGEVI.md](docs/DOCUMENTACAO-SIGEVI.md)  
 > **Checklist do anúncio da UC:** [docs/CHECKLIST-TRABALHO.md](docs/CHECKLIST-TRABALHO.md)
 
@@ -22,24 +23,28 @@ API REST corporativa em **Java 21** + **Spring Boot 3** para gestão de imóveis
 ## Estrutura de pastas
 
 ```
-sigevi/
-├── src/main/java/br/com/sigevi/
-│   ├── config/          # Security, Swagger, Observer wiring
-│   ├── controller/      # REST endpoints
-│   ├── dto/             # Request/Response (DTO Pattern)
-│   ├── exception/       # Exceções + handler global
-│   ├── mapper/          # Conversão Entity ↔ DTO
-│   ├── model/           # Entidades JPA + enums
-│   ├── pattern/         # Strategy, Factory, Observer
-│   ├── repository/      # Repository Pattern (Spring Data)
-│   ├── security/        # JWT, filtros, UserDetails
-│   ├── service/         # Regras de negócio
-│   └── validator/       # Validações de domínio
-├── src/main/resources/
-│   ├── application.yml
-│   └── db/migration/    # Flyway V1, V2
-├── src/test/java/       # Testes unitários
-└── scripts/             # SQL manual PostgreSQL
+trabalhofinal/
+├── docs/                    # documentação (.md) — fora do código
+├── README.md
+└── sigevi/                  # aplicação Spring Boot
+    ├── src/main/java/br/com/sigevi/
+    │   ├── config/
+    │   ├── controller/
+    │   ├── dto/
+    │   ├── exception/
+    │   ├── mapper/
+    │   ├── model/
+    │   ├── pattern/
+    │   ├── repository/
+    │   ├── security/
+    │   ├── service/
+    │   └── validator/
+    ├── src/main/resources/
+    │   ├── static/          # frontend (HTML/CSS/JS)
+    │   └── db/migration/
+    ├── src/test/java/
+    ├── scripts/
+    └── pom.xml
 ```
 
 ## Arquitetura
@@ -176,42 +181,24 @@ Use **Authorize** com: `Bearer <seu-jwt>`.
 
 ## Como executar
 
-### Opção A — Sem PostgreSQL (recomendado para testar rápido)
+Guia completo com **todos os comandos**, URLs do **frontend**, **Swagger**, **H2** e troubleshooting:
 
-```bash
-cd sigevi
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
+**[docs/COMO-INICIAR.md](docs/COMO-INICIAR.md)**
+
+**Resumo rápido (Windows + H2):**
+
+```powershell
+cd C:\Users\teste\Desktop\trabalhofinal\sigevi
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"
 ```
 
-Na IDE (VS Code / IntelliJ): defina **Active profiles** = `dev`.
+| O quê | URL |
+|-------|-----|
+| Login (front) | http://localhost:8080/api/index.html |
+| Painel (front) | http://localhost:8080/api/app.html |
+| Swagger (back) | http://localhost:8080/api/swagger-ui.html |
 
-Usa banco **H2 em memória** — não precisa instalar PostgreSQL.
-
-### Opção B — Com PostgreSQL (produção / entrega final)
-
-**Pré-requisitos:** JDK 21, Maven 3.9+, PostgreSQL 15+ rodando na porta **5432**.
-
-```bash
-psql -U postgres -f scripts/init-database.sql
-cd sigevi
-mvn spring-boot:run
-```
-
-### Erro comum: `Connection to localhost:5432 refused`
-
-Significa que o **PostgreSQL não está instalado, não está ligado ou o banco `sigevi` não existe**.
-
-- Suba o serviço PostgreSQL **ou**
-- Use o perfil **`dev`** (Opção A acima).
-
-### Testes
-```bash
-mvn test
-```
-
-### Usuário inicial (Flyway V2)
-- **Email:** `admin@sigevi.com`
-- **Senha:** `Admin@123`
+**Usuário inicial:** `admin@sigevi.com` / `Admin@123`
 
 ## Variáveis de ambiente
 

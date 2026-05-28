@@ -1,6 +1,4 @@
-# Perfil para desenvolvimento SEM PostgreSQL (banco em memoria H2)
-# Executar: mvn spring-boot:run -Dspring-boot.run.profiles=dev
-# Ou na IDE: Active profiles = dev
+# perfil dev: H2 em memoria, sem PostgreSQL
 
 spring:
   datasource:
@@ -19,6 +17,9 @@ spring:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
 
   flyway:
     enabled: false

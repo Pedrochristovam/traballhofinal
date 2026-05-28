@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Repository Pattern (GoF via Spring Data JPA): abstrai persistencia de Usuario.
- */
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 

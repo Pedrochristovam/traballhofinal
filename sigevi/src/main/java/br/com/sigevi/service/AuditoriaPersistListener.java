@@ -8,10 +8,7 @@ import br.com.sigevi.repository.UsuarioRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Observer — quem de fato salva a auditoria no PostgreSQL.
- * O service só publica o evento; esse trem aqui escuta e grava, separadinho (ISP/DIP).
- */
+/** Escuta evento e grava auditoria no banco. */
 @Component
 public class AuditoriaPersistListener implements AuditoriaListener {
 

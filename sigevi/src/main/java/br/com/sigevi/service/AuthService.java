@@ -15,10 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Serviço de login, ó.
- * Valida e-mail/senha, gera o JWT e já registra na auditoria que o caboclo entrou no sistema.
- */
+/** Login: confere senha, gera token e registra na auditoria. */
 @Service
 public class AuthService {
 
@@ -45,7 +42,6 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
-        // Spring Security confere senha com BCrypt — se num bater, já era
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha()));
