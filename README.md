@@ -1,5 +1,12 @@
 # SIGEVI — Sistema de Gestão de Vistorias Imobiliárias
 
+Integrantes: 
+Pedro Christovam Marques RA: 124117694 
+Gabriel Alves Bragança RA: 124221803
+Vinicius Francisco Silva RA: 1252211622482 
+Pedro Henrique Silva Lopes RA: 11914300
+João Vitor Romani Nogueira de Paula RA: 124110378
+
 API REST corporativa em **Java 21** + **Spring Boot 3** para gestão de imóveis, vistorias, fotos, relatórios PDF e auditoria.
 
 > **Como iniciar o sistema (comandos + URLs front/back):** [docs/COMO-INICIAR.md](docs/COMO-INICIAR.md)  
