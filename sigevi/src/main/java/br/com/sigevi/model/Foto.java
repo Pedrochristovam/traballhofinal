@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "fotos")
-@Getter
+@Getter 
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
