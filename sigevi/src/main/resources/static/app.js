@@ -170,12 +170,170 @@
     });
   }
 
+  function formatDate(value) {
+    if (!value) return "—";
+    const [y, m, d] = value.split("-");
+    if (!y || !m || !d) return value;
+    return `${d}/${m}/${y}`;
+  }
+
+  function renderEmpty(el, message) {
+    if (!el) return;
+    el.innerHTML = `<div class="empty-state">${message}</div>`;
+  }
+
+  function renderKpiCards(container, items) {
+    if (!container) return;
+    container.innerHTML = items.map((item) => `
+      <div class="kpi-card ${item.variant || ""}">
+        <div class="kpi-card__label">${item.label}</div>
+        <div class="kpi-card__value">${item.value}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderTable(container, headers, rows, emptyMessage) {
+    if (!container) return;
+    if (!rows.length) {
+      renderEmpty(container, emptyMessage);
+      return;
+    }
+    container.innerHTML = `
+      <table class="data-table">
+        <thead>
+          <tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr>
+        </thead>
+        <tbody>
+          ${rows.map((cells) => `<tr>${cells.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}
+        </tbody>
+      </table>
+    `;
+  }
+
+  async function loadAdminOperacional() {
+    const msg = $("operacionalMsg");
+    hideAlert(msg);
+    const [resumo, atrasadas, produtividade, atividades] = await Promise.all([
+      apiFetch("/operacional/resumo"),
+      apiFetch("/operacional/vistorias/atrasadas"),
+      apiFetch("/operacional/inspetores/produtividade"),
+      apiFetch("/operacional/atividades-recentes?limite=10")
+    ]);
+
+    renderKpiCards($("kpiGrid"), [
+      { label: "Vistorias ativas", value: resumo.vistoriasAtivas },
+      { label: "Atrasadas", value: resumo.vistoriasAtrasadas, variant: resumo.vistoriasAtrasadas > 0 ? "kpi-card--warn" : "" },
+      { label: "Concluídas (semana)", value: resumo.concluidasSemana, variant: "kpi-card--ok" },
+      { label: "Concluídas (mês)", value: resumo.concluidasMes, variant: "kpi-card--ok" },
+      { label: "Total vistorias", value: resumo.totalVistorias },
+      { label: "Total imóveis", value: resumo.totalImoveis },
+      { label: "Agendadas", value: resumo.totalPorStatus?.AGENDADA ?? 0 },
+      { label: "Em andamento", value: resumo.totalPorStatus?.EM_ANDAMENTO ?? 0 }
+    ]);
+
+    renderTable(
+      $("atrasadasList"),
+      ["ID", "Matrícula", "Inspetor", "Data", "Dias atraso"],
+      atrasadas.map((v) => [
+        v.id,
+        v.imovelMatricula,
+        v.inspetorNome,
+        formatDate(v.dataVistoria),
+        `<span class="badge badge--warn">${v.diasAtraso}d</span>`
+      ]),
+      "Nenhuma vistoria atrasada no momento."
+    );
+
+    renderTable(
+      $("produtividadeList"),
+      ["Inspetor", "Concluídas", "Pendentes", "Total"],
+      produtividade.map((p) => [p.inspetorNome, p.concluidas, p.pendentes, p.totalVistorias]),
+      "Ainda não há dados de produtividade."
+    );
+
+    renderTable(
+      $("atividadesList"),
+      ["Quando", "Entidade", "Ação", "Usuário"],
+      atividades.map((a) => [
+        a.criadoEm ? new Date(a.criadoEm).toLocaleString("pt-BR") : "—",
+        `${a.entidade} #${a.entidadeId}`,
+        a.acao,
+        a.usuarioNome || "—"
+      ]),
+      "Nenhuma atividade registrada."
+    );
+  }
+
+  async function loadUserOperacional() {
+    const carga = await apiFetch("/operacional/minha-carga");
+
+    renderKpiCards($("minhaCargaGrid"), [
+      { label: "Agendadas", value: carga.agendadas },
+      { label: "Em andamento", value: carga.emAndamento },
+      { label: "Atrasadas", value: carga.atrasadas, variant: carga.atrasadas > 0 ? "kpi-card--warn" : "" },
+      { label: "Concluídas", value: carga.concluidas, variant: "kpi-card--ok" }
+    ]);
+
+    renderTable(
+      $("minhasVistoriasList"),
+      ["ID", "Matrícula", "Endereço", "Data", "Status"],
+      (carga.proximasVistorias || []).map((v) => [
+        v.id,
+        v.imovelMatricula,
+        v.imovelEndereco || "—",
+        formatDate(v.dataVistoria),
+        v.atrasada ? `<span class="badge badge--warn">${v.status} · ${v.diasAtraso}d</span>` : v.status
+      ]),
+      "Você não possui vistorias ativas no momento."
+    );
+  }
+
+  async function initOperacional(me) {
+    const section = $("operacionalSection");
+    const adminPanel = $("adminOperacional");
+    const userPanel = $("userOperacional");
+    const msg = $("operacionalMsg");
+    const refreshBtn = $("refreshOperacionalBtn");
+    if (!section || !me) return;
+
+    section.classList.remove("hidden");
+    const isAdmin = me.role === "ADMIN";
+    if (adminPanel) adminPanel.classList.toggle("hidden", !isAdmin);
+    if (userPanel) userPanel.classList.toggle("hidden", isAdmin);
+
+    const load = async () => {
+      hideAlert(msg);
+      if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = "Carregando...";
+      }
+      try {
+        if (isAdmin) {
+          await loadAdminOperacional();
+        } else {
+          await loadUserOperacional();
+        }
+      } catch (err) {
+        showAlert(msg, "error", err.message || "Falha ao carregar painel operacional");
+      } finally {
+        if (refreshBtn) {
+          refreshBtn.disabled = false;
+          refreshBtn.textContent = "Atualizar";
+        }
+      }
+    };
+
+    if (refreshBtn) refreshBtn.addEventListener("click", load);
+    await load();
+  }
+
   async function initApp() {
     ensureAuthed();
     setText("apiBase", apiBase);
 
     const me = getMe();
     if (me) setText("meLabel", `${me.nome} (${me.role})`);
+    await initOperacional(me);
 
     const logoutBtn = $("logoutBtn");
     if (logoutBtn) {

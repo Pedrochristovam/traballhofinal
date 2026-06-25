@@ -26,6 +26,44 @@
         </div>
       </header>
 
+      <section id="operacionalSection" class="operacional hidden">
+        <div class="card card--operacional">
+          <div class="operacional__header">
+            <div>
+              <h2 class="card__title">Painel operacional</h2>
+              <p class="card__subtitle">Visão consolidada de vistorias, atrasos e produtividade.</p>
+            </div>
+            <button id="refreshOperacionalBtn" class="btn btn--secondary" type="button">Atualizar</button>
+          </div>
+          <div id="operacionalMsg" class="alert hidden"></div>
+
+          <div id="adminOperacional" class="hidden">
+            <div id="kpiGrid" class="kpi-grid"></div>
+
+            <div class="operacional__columns">
+              <div>
+                <h3 class="card__title card__title--sm">Vistorias atrasadas</h3>
+                <div id="atrasadasList" class="table-wrap"></div>
+              </div>
+              <div>
+                <h3 class="card__title card__title--sm">Produtividade por inspetor</h3>
+                <div id="produtividadeList" class="table-wrap"></div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+            <h3 class="card__title card__title--sm">Atividades recentes</h3>
+            <div id="atividadesList" class="table-wrap"></div>
+          </div>
+
+          <div id="userOperacional" class="hidden">
+            <div id="minhaCargaGrid" class="kpi-grid"></div>
+            <h3 class="card__title card__title--sm">Próximas vistorias</h3>
+            <div id="minhasVistoriasList" class="table-wrap"></div>
+          </div>
+        </div>
+      </section>
+
       <section class="grid">
         <div class="card">
           <h2 class="card__title">1) Criar imóvel</h2>
