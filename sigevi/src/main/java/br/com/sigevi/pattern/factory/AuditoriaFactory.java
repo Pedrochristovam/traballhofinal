@@ -2,7 +2,6 @@ package br.com.sigevi.pattern.factory;
 
 import br.com.sigevi.model.Auditoria;
 import br.com.sigevi.model.Usuario;
-import br.com.sigevi.model.enums.AcaoAuditoria;
 import br.com.sigevi.pattern.observer.AuditoriaEvent;
 
 public final class AuditoriaFactory {
