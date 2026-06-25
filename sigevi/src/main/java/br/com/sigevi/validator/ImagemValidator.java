@@ -17,13 +17,13 @@ public class ImagemValidator {
 
     public void validar(MultipartFile arquivo) {
         if (arquivo == null || arquivo.isEmpty()) {
-            throw new BusinessException("Arquivo de imagem e obrigatorio");
+            throw new BusinessException("Arquivo de imagem é obrigatório");
         }
         if (!TIPOS_PERMITIDOS.contains(arquivo.getContentType())) {
-            throw new BusinessException("Formato invalido. Permitidos: JPEG, PNG, WEBP");
+            throw new BusinessException("Formato inválido. Permitidos: .jpeg, .png, .webp");
         }
         if (arquivo.getSize() > TAMANHO_MAXIMO) {
-            throw new BusinessException("Arquivo excede o tamanho maximo de 10MB");
+            throw new BusinessException("Arquivo excede o tamanho máximo de 10 MB");
         }
     }
 }
