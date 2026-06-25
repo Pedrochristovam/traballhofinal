@@ -53,7 +53,9 @@ public class SecurityConfig {
                                 "/h2-console/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios").hasRole("ADMIN")
-                        .requestMatchers("/usuarios/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/usuarios", "/usuarios/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/auditorias/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

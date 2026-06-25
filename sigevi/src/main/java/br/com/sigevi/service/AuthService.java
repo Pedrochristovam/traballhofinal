@@ -7,8 +7,10 @@ import br.com.sigevi.exception.UnauthorizedException;
 import br.com.sigevi.mapper.UsuarioMapper;
 import br.com.sigevi.model.enums.AcaoAuditoria;
 import br.com.sigevi.repository.UsuarioRepository;
+import br.com.sigevi.security.JwtProperties;
 import br.com.sigevi.security.JwtTokenProvider;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +24,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProperties jwtProperties;
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
     private final AuditoriaService auditoriaService;
@@ -29,12 +32,14 @@ public class AuthService {
     public AuthService(AuthenticationManager authenticationManager,
                        UserDetailsService userDetailsService,
                        JwtTokenProvider jwtTokenProvider,
+                       JwtProperties jwtProperties,
                        UsuarioRepository usuarioRepository,
                        UsuarioMapper usuarioMapper,
                        AuditoriaService auditoriaService) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtProperties = jwtProperties;
         this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = usuarioMapper;
         this.auditoriaService = auditoriaService;
@@ -45,12 +50,12 @@ public class AuthService {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha()));
-        } catch (Exception e) {
+        } catch (BadCredentialsException e) {
             throw new UnauthorizedException("Credenciais invalidas");
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        String token = jwtTokenProvider.generateToken(userDetails); // aqui nasce o token pro Swagger/Postman
+        String token = jwtTokenProvider.generateToken(userDetails);
 
         var usuario = usuarioRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UnauthorizedException("Usuario nao encontrado"));
@@ -63,7 +68,7 @@ public class AuthService {
         return LoginResponse.builder()
                 .token(token)
                 .tipo("Bearer")
-                .expiresIn(86400L)
+                .expiresIn(jwtProperties.getExpirationMs() / 1000)
                 .usuario(usuarioResponse)
                 .build();
     }

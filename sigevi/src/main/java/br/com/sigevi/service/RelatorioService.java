@@ -1,6 +1,7 @@
 package br.com.sigevi.service;
 
 import br.com.sigevi.dto.request.RelatorioRequest;
+import br.com.sigevi.dto.response.FileDownloadResult;
 import br.com.sigevi.dto.response.RelatorioResponse;
 import br.com.sigevi.mapper.RelatorioMapper;
 import br.com.sigevi.model.Relatorio;
@@ -60,20 +61,25 @@ public class RelatorioService {
         auditoriaService.registrar("Relatorio", relatorio.getId(), AcaoAuditoria.CRIACAO,
                 null, request.getTipo().name(), usuarioId);
 
-        return RelatorioMapper.toResponse(relatorio);
+        return RelatorioMapper.toResponse(relatorio, "/api");
     }
 
     @Transactional(readOnly = true)
     public List<RelatorioResponse> listarPorVistoria(Long vistoriaId) {
         return relatorioRepository.findByVistoriaIdOrderByCriadoEmDesc(vistoriaId).stream()
-                .map(RelatorioMapper::toResponse)
+                .map(r -> RelatorioMapper.toResponse(r, "/api"))
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public Resource download(Long relatorioId) throws IOException {
+    public FileDownloadResult download(Long relatorioId) throws IOException {
         Relatorio relatorio = relatorioRepository.findById(relatorioId)
                 .orElseThrow(() -> new br.com.sigevi.exception.ResourceNotFoundException("Relatorio", relatorioId));
-        return new UrlResource(Paths.get(relatorio.getCaminhoArquivo()).toUri());
+        Path path = Paths.get(relatorio.getCaminhoArquivo());
+        Resource resource = new UrlResource(path.toUri());
+        if (!resource.exists()) {
+            throw new br.com.sigevi.exception.ResourceNotFoundException("Arquivo do relatorio", relatorioId);
+        }
+        return new FileDownloadResult(resource, "application/pdf", "relatorio-" + relatorioId + ".pdf");
     }
 }

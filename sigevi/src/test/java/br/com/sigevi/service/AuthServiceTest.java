@@ -6,6 +6,7 @@ import br.com.sigevi.mapper.UsuarioMapper;
 import br.com.sigevi.model.Usuario;
 import br.com.sigevi.model.enums.RoleUsuario;
 import br.com.sigevi.repository.UsuarioRepository;
+import br.com.sigevi.security.JwtProperties;
 import br.com.sigevi.security.JwtTokenProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,7 @@ class AuthServiceTest {
     @Mock private AuthenticationManager authenticationManager;
     @Mock private UserDetailsService userDetailsService;
     @Mock private JwtTokenProvider jwtTokenProvider;
+    @Mock private JwtProperties jwtProperties;
     @Mock private UsuarioRepository usuarioRepository;
     @Mock private UsuarioMapper usuarioMapper;
     @Mock private AuditoriaService auditoriaService;
@@ -49,6 +51,7 @@ class AuthServiceTest {
                 .thenReturn(User.builder().username("admin@sigevi.com").password("hash")
                         .authorities(List.of()).build());
         when(jwtTokenProvider.generateToken(any())).thenReturn("jwt-token");
+        when(jwtProperties.getExpirationMs()).thenReturn(86400000L);
         when(usuarioRepository.findByEmail("admin@sigevi.com")).thenReturn(Optional.of(usuario));
         when(usuarioMapper.toResponse(usuario)).thenReturn(
                 br.com.sigevi.dto.response.UsuarioResponse.builder().id(1L).email("admin@sigevi.com").build());
@@ -57,6 +60,7 @@ class AuthServiceTest {
 
         assertEquals("jwt-token", response.getToken());
         assertEquals("Bearer", response.getTipo());
+        assertEquals(86400L, response.getExpiresIn());
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
     }
 

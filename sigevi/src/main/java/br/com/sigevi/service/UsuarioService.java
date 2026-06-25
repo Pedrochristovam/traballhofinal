@@ -33,7 +33,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioResponse cadastrar(UsuarioRequest request) {
+    public UsuarioResponse cadastrar(UsuarioRequest request, Long usuarioExecutorId) {
         if (usuarioRepository.existsByEmail(request.getEmail())) {
             throw new BusinessException("Email ja cadastrado");
         }
@@ -43,12 +43,12 @@ public class UsuarioService {
         Usuario usuario = usuarioMapper.toEntity(request, passwordEncoder.encode(request.getSenha()));
         usuario = usuarioRepository.save(usuario);
         auditoriaService.registrar("Usuario", usuario.getId(), AcaoAuditoria.CRIACAO,
-                null, usuario.getEmail(), usuario.getId());
+                null, usuario.getEmail(), usuarioExecutorId);
         return usuarioMapper.toResponse(usuario);
     }
 
     @Transactional
-    public UsuarioResponse atualizar(Long id, UsuarioRequest request) {
+    public UsuarioResponse atualizar(Long id, UsuarioRequest request, Long usuarioExecutorId) {
         Usuario usuario = buscarEntidade(id);
         String emailAnterior = usuario.getEmail();
         if (!emailAnterior.equals(request.getEmail()) && usuarioRepository.existsByEmail(request.getEmail())) {
@@ -60,7 +60,7 @@ public class UsuarioService {
         }
         usuario = usuarioRepository.save(usuario);
         auditoriaService.registrar("Usuario", id, AcaoAuditoria.ATUALIZACAO,
-                emailAnterior, usuario.getEmail(), id);
+                emailAnterior, usuario.getEmail(), usuarioExecutorId);
         return usuarioMapper.toResponse(usuario);
     }
 
@@ -72,12 +72,12 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void desativar(Long id) {
+    public void desativar(Long id, Long usuarioExecutorId) {
         Usuario usuario = buscarEntidade(id);
         usuario.setAtivo(false);
         usuarioRepository.save(usuario);
         auditoriaService.registrar("Usuario", id, AcaoAuditoria.ATUALIZACAO,
-                "ativo=true", "ativo=false", id);
+                "ativo=true", "ativo=false", usuarioExecutorId);
     }
 
     @Transactional(readOnly = true)

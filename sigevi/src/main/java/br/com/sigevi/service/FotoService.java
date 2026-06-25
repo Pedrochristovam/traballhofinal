@@ -1,5 +1,6 @@
 package br.com.sigevi.service;
 
+import br.com.sigevi.dto.response.FileDownloadResult;
 import br.com.sigevi.dto.response.FotoResponse;
 import br.com.sigevi.exception.ResourceNotFoundException;
 import br.com.sigevi.mapper.FotoMapper;
@@ -84,7 +85,7 @@ public class FotoService {
     }
 
     @Transactional(readOnly = true)
-    public Resource download(Long fotoId) throws IOException {
+    public FileDownloadResult download(Long fotoId) throws IOException {
         Foto foto = fotoRepository.findById(fotoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Foto", fotoId));
         Path path = Paths.get(foto.getCaminho());
@@ -92,6 +93,6 @@ public class FotoService {
         if (!resource.exists()) {
             throw new ResourceNotFoundException("Arquivo da foto", fotoId);
         }
-        return resource;
+        return new FileDownloadResult(resource, foto.getContentType(), foto.getNomeArquivo());
     }
 }

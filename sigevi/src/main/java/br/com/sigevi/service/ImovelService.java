@@ -48,6 +48,10 @@ public class ImovelService {
     public ImovelResponse atualizar(Long id, ImovelRequest request, Long usuarioId) {
         Imovel imovel = buscarEntidade(id);
         String matriculaAnterior = imovel.getMatricula();
+        if (!matriculaAnterior.equals(request.getMatricula())
+                && imovelRepository.existsByMatriculaAndIdNot(request.getMatricula(), id)) {
+            throw new BusinessException("Matricula ja cadastrada");
+        }
         imovelMapper.updateEntity(imovel, request);
         imovel = imovelRepository.save(imovel);
         auditoriaService.registrar("Imovel", id, AcaoAuditoria.ATUALIZACAO,

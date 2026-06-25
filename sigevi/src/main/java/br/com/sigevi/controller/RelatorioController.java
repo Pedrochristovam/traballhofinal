@@ -1,9 +1,8 @@
 package br.com.sigevi.controller;
 
 import br.com.sigevi.dto.request.RelatorioRequest;
+import br.com.sigevi.dto.response.FileDownloadResult;
 import br.com.sigevi.dto.response.RelatorioResponse;
-import br.com.sigevi.model.Relatorio;
-import br.com.sigevi.repository.RelatorioRepository;
 import br.com.sigevi.security.SecurityUtils;
 import br.com.sigevi.service.RelatorioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,14 +25,10 @@ import java.util.List;
 public class RelatorioController {
 
     private final RelatorioService relatorioService;
-    private final RelatorioRepository relatorioRepository;
     private final SecurityUtils securityUtils;
 
-    public RelatorioController(RelatorioService relatorioService,
-                               RelatorioRepository relatorioRepository,
-                               SecurityUtils securityUtils) {
+    public RelatorioController(RelatorioService relatorioService, SecurityUtils securityUtils) {
         this.relatorioService = relatorioService;
-        this.relatorioRepository = relatorioRepository;
         this.securityUtils = securityUtils;
     }
 
@@ -53,11 +48,10 @@ public class RelatorioController {
     @GetMapping("/{id}/download")
     @Operation(summary = "Download do relatorio PDF")
     public ResponseEntity<Resource> download(@PathVariable Long id) throws IOException {
-        Resource resource = relatorioService.download(id);
-        Relatorio relatorio = relatorioRepository.findById(id).orElseThrow();
+        FileDownloadResult download = relatorioService.download(id);
         return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=relatorio-" + id + ".pdf")
-                .body(resource);
+                .contentType(MediaType.parseMediaType(download.contentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + download.filename() + "\"")
+                .body(download.resource());
     }
 }

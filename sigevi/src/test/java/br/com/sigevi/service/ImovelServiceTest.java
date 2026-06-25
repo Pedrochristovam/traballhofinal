@@ -56,4 +56,19 @@ class ImovelServiceTest {
 
         verify(imovelRepository).save(imovel);
     }
+
+    @Test
+    void deveRejeitarMatriculaDuplicadaNaAtualizacao() {
+        ImovelRequest request = new ImovelRequest();
+        request.setMatricula("MAT-003");
+
+        Imovel imovel = Imovel.builder().id(10L).matricula("MAT-002").build();
+
+        when(imovelRepository.findById(10L)).thenReturn(java.util.Optional.of(imovel));
+        when(imovelRepository.existsByMatriculaAndIdNot("MAT-003", 10L)).thenReturn(true);
+
+        assertThrows(BusinessException.class,
+                () -> imovelService.atualizar(10L, request, 1L));
+        verify(imovelRepository, never()).save(any());
+    }
 }

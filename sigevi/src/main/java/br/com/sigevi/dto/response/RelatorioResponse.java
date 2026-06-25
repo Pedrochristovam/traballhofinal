@@ -13,7 +13,7 @@ public class RelatorioResponse {
     private Long id;
     private Long vistoriaId;
     private TipoRelatorio tipo;
-    private String caminhoArquivo;
+    private String url;
     private Long geradoPorId;
     private LocalDateTime criadoEm;
 }

@@ -1,8 +1,7 @@
 package br.com.sigevi.controller;
 
 import br.com.sigevi.dto.response.FotoResponse;
-import br.com.sigevi.model.Foto;
-import br.com.sigevi.repository.FotoRepository;
+import br.com.sigevi.dto.response.FileDownloadResult;
 import br.com.sigevi.security.SecurityUtils;
 import br.com.sigevi.service.FotoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,12 +24,10 @@ import java.util.List;
 public class FotoController {
 
     private final FotoService fotoService;
-    private final FotoRepository fotoRepository;
     private final SecurityUtils securityUtils;
 
-    public FotoController(FotoService fotoService, FotoRepository fotoRepository, SecurityUtils securityUtils) {
+    public FotoController(FotoService fotoService, SecurityUtils securityUtils) {
         this.fotoService = fotoService;
-        this.fotoRepository = fotoRepository;
         this.securityUtils = securityUtils;
     }
 
@@ -50,11 +47,10 @@ public class FotoController {
     @GetMapping("/{id}/download")
     @Operation(summary = "Download da foto")
     public ResponseEntity<Resource> download(@PathVariable Long id) throws IOException {
-        Resource resource = fotoService.download(id);
-        Foto foto = fotoRepository.findById(id).orElseThrow();
+        FileDownloadResult download = fotoService.download(id);
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(foto.getContentType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + foto.getNomeArquivo() + "\"")
-                .body(resource);
+                .contentType(MediaType.parseMediaType(download.contentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + download.filename() + "\"")
+                .body(download.resource());
     }
 }

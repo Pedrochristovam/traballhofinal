@@ -15,4 +15,6 @@ public interface ImovelRepository extends JpaRepository<Imovel, Long> {
     List<Imovel> findByEnderecoContainingIgnoreCase(String endereco);
 
     boolean existsByMatricula(String matricula);
+
+    boolean existsByMatriculaAndIdNot(String matricula, Long id);
 }

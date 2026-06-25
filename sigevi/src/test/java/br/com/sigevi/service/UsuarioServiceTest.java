@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,7 +36,7 @@ class UsuarioServiceTest {
 
         when(usuarioRepository.existsByEmail("teste@sigevi.com")).thenReturn(true);
 
-        assertThrows(BusinessException.class, () -> usuarioService.cadastrar(request));
+        assertThrows(BusinessException.class, () -> usuarioService.cadastrar(request, 99L));
         verify(usuarioRepository, never()).save(any());
     }
 
@@ -57,9 +57,9 @@ class UsuarioServiceTest {
         when(usuarioMapper.toResponse(usuario)).thenReturn(
                 br.com.sigevi.dto.response.UsuarioResponse.builder().id(1L).email("novo@sigevi.com").build());
 
-        usuarioService.cadastrar(request);
+        usuarioService.cadastrar(request, 99L);
 
         verify(usuarioRepository).save(usuario);
-        verify(auditoriaService).registrar(any(), any(), any(), any(), any(), any());
+        verify(auditoriaService).registrar(eq("Usuario"), eq(1L), any(), isNull(), eq("novo@sigevi.com"), eq(99L));
     }
 }

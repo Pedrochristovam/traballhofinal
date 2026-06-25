@@ -8,12 +8,12 @@ public final class RelatorioMapper {
     private RelatorioMapper() {
     }
 
-    public static RelatorioResponse toResponse(Relatorio relatorio) {
+    public static RelatorioResponse toResponse(Relatorio relatorio, String baseUrl) {
         return RelatorioResponse.builder()
                 .id(relatorio.getId())
                 .vistoriaId(relatorio.getVistoria().getId())
                 .tipo(relatorio.getTipo())
-                .caminhoArquivo(relatorio.getCaminhoArquivo())
+                .url(baseUrl + "/relatorios/" + relatorio.getId() + "/download")
                 .geradoPorId(relatorio.getGeradoPor().getId())
                 .criadoEm(relatorio.getCriadoEm())
                 .build();
